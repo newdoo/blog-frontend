@@ -19,21 +19,21 @@ const initialState = Map({
     title: '',
     markdown: '',
     tags: '',
-    postId: null,
+    postId: null
 });
 
 // reducer
 export default handleActions({
-    [INITIALIZE]: (state, action) => initialize,
+    [INITIALIZE]: (state, action) => initialState,
     [CHANGE_INPUT]: (state, action) => {
         const { name, value } = action.payload;
         return state.set(name, value);
     },
     ...pender({
         type: WRITE_POST,
-        onSuceess: (state, action) => {
-            const { _id } = action.payload.data;
-            return state.set('postId', _id);
+        onSuccess: (state, action) => {
+            const { id } = action.payload.data;
+            return state.set('postId', id);
         }
     })
 }, initialState)
