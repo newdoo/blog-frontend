@@ -5,10 +5,10 @@ import PostBody from 'components/post/PostBody';
 import Post from 'containers/post/Post';
 
 const PostPage = ({match}) => {
-    const { id } = match.params;
+    const { _id } = match.params;
     return (
         <PageTemplate>
-            <Post id={id} />
+            <Post id={_id} />
         </PageTemplate>
     );
 };
