@@ -56,7 +56,20 @@ module.exports = {
   // You can exclude the *.map files from the build during deployment.
   devtool: shouldUseSourceMap ? 'source-map' : false,
   // In production, we only want to load the polyfills and the app code.
-  entry: [require.resolve('./polyfills'), paths.appIndexJs],
+  // entry: [require.resolve('./polyfills'), paths.appIndexJs],
+  entry: {
+    app: paths.appIndexJs,
+    vendor: [
+      require.resolve('./polyfills'),
+      'react',
+      'react-dom',
+      'react-router-dom',
+      'redux',
+      'axios',
+      'codemirror',
+      'prismjs',
+    ],
+  },
   output: {
     // The build folder.
     path: paths.appBuild,
@@ -341,6 +354,7 @@ module.exports = {
     // Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.
     new ExtractTextPlugin({
       filename: cssFilename,
+      allChunks: true
     }),
     // Generate a manifest file which contains a mapping of all asset filenames
     // to their corresponding output file so that tools can pick it up without
@@ -384,6 +398,14 @@ module.exports = {
     // https://github.com/jmblog/how-to-optimize-momentjs-with-webpack
     // You can remove this if you don't use Moment.js:
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+    }),
+    new webpack.NormalModuleReplacementPlugin(
+      /^pages$/,
+      'pages/index.async.js'
+    ),
   ],
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.
